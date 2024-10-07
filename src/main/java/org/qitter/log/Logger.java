@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Logger {
+public class Logger implements AutoCloseable {
     private static final Path LOG_PATH = Path.of("logs.log");
     private static final Path ERROR_PATH = Path.of("errors.log");
     private static final ExecutorService logService = Executors.newSingleThreadExecutor();
@@ -17,6 +17,7 @@ public class Logger {
     private static final Logger logger = new Logger();
     private final PrintWriter logWriter;
     private final PrintWriter errorWriter;
+    private boolean log;
     private Logger() {
         try {
             logWriter = new PrintWriter(LOG_PATH.toFile());
@@ -25,11 +26,19 @@ public class Logger {
             throw new RuntimeException(e);
         }
     }
+
+    public void setLog(boolean log) {
+        this.log = log;
+    }
+
     public static Logger getLogger() {
         return logger;
     }
 
     public void log(@NotNull CharSequence message) {
+        if(!log) {
+            return;
+        }
         logService.execute(() -> {
             logWriter.println(message);
             logWriter.flush();
@@ -37,25 +46,40 @@ public class Logger {
     }
 
     public void log(@NotNull CharSequence ...messages) {
+        if(!log) {
+            return;
+        }
         log(String.join(" --- ", messages));
     }
 
     public void log(@NotNull Object o,CharSequence ... messages) {
+        if(!log) {
+            return;
+        }
         log();
         log(Objects.toString(o),String.join(" --- ", messages));
         log();
     }
 
     public void log(@NotNull Object o) {
+        if(!log) {
+            return;
+        }
         log(String.valueOf(o));
         log();
     }
 
     public void log(@NotNull Object o,@NotNull CharSequence message) {
+        if(!log) {
+            return;
+        }
         log(o + " : " + message);
     }
 
     public void error(@NotNull CharSequence message) {
+        if(!log) {
+            return;
+        }
         errorService.execute(() ->{
             errorWriter.println(message);
             errorWriter.flush();
@@ -64,11 +88,15 @@ public class Logger {
 
     @NotNull
     public RuntimeException error(@NotNull RuntimeException e) {
+        if(!log) {
+            return e;
+        }
         e.printStackTrace(errorWriter);
         return e;
     }
 
-    public static void close() {
+    @Override
+    public void close() {
         logService.shutdown();
         errorService.shutdown();
         logger.logWriter.close();
