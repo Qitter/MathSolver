@@ -7,30 +7,43 @@ import org.qitter.log.Logger;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.function.Consumer;
+import java.util.*;
 
-public class ConfigReader implements AutoCloseable{
-    private static final Charset CHARSET = StandardCharsets.UTF_8;
+public class ConfigReader {
+    @NotNull
+    public static final Charset CHARSET = StandardCharsets.UTF_8;
+    @NotNull
+    private static final HashSet<ConfigReader> configReaders = new HashSet<>();
+    @NotNull
     private final File configPath;
+    @NotNull
     private final Properties properties;
-    ConfigReader(@NotNull File configFile, @NotNull Consumer<BufferedWriter> ifFileNotExist) {
+    ConfigReader(@NotNull File configFile, @NotNull Map<String,String> ifFileNotExist) {
         this.configPath = configFile;
         this.properties = new Properties();
 
         try {
             boolean exists = configFile.exists();
-            if (!exists && !configFile.createNewFile()) {
-                throw Logger.getLogger().error(
-                        new RuntimeException("创建" + configFile + "失败")
-                );
-            }
+
+            Logger.getLogger().log(this, configFile + (exists?" 存在":" 不存在"));
             if (!exists) {
-                ifFileNotExist.accept(new BufferedWriter(new FileWriter(configFile, CHARSET)));
+                Logger.getLogger().log(this,configFile + " 不存在，创建新文件");
+                Optional.ofNullable(configFile.getParentFile()).ifPresent(p->{
+                    if (!p.exists() && !p.mkdirs())
+                        throw Logger.getLogger().error(new RuntimeException("创建" + p + "失败"));
+                });
+                if (!configFile.createNewFile()) {
+                    throw Logger.getLogger().error(new RuntimeException("创建" + configFile + "失败"));
+                }
             }
 
             properties.load(new FileReader(configFile, CHARSET));
+            Logger.getLogger().log(this,"读取配置文件" + configFile + "成功");
+            if (!exists) {
+                ifFileNotExist.forEach(this::setProperty);
+            }
+
+            Logger.getLogger().log(this,properties.toString());
         } catch (IOException e) {
             throw Logger.getLogger().error(
                     new RuntimeException(e)
@@ -38,10 +51,12 @@ public class ConfigReader implements AutoCloseable{
         }
     }
 
+    @NotNull
     public Optional<String> getProperty(@NotNull String key) {
         return Optional.ofNullable(properties.getProperty(key));
     }
 
+    @NotNull
     public String getProperty(@NotNull String key, @NotNull String defaultValue) {
         return properties.getProperty(key, defaultValue);
     }
@@ -105,6 +120,7 @@ public class ConfigReader implements AutoCloseable{
     }
 
     public void save() {
+        Logger.getLogger().log(this,"正在保存",properties.toString());
         try {
             properties.store(new FileWriter(configPath,CHARSET), null);
         } catch (IOException e) {
@@ -114,18 +130,26 @@ public class ConfigReader implements AutoCloseable{
         }
     }
 
+    @NotNull
     public File getConfigPath() {
         return configPath;
     }
 
     @Contract("_, _ -> new")
     @NotNull
-    public static ConfigReader create(@NotNull String configPath, @NotNull Consumer<BufferedWriter> ifFileNotExist) {
-        return new ConfigReader(new File(configPath),ifFileNotExist);
+    public static ConfigReader create(@NotNull String configPath, @NotNull Map<String,String> ifFileNotExist) {
+        ConfigReader configReader = new ConfigReader(new File(configPath), ifFileNotExist);
+        Logger.getLogger().log("创建配置文件",configPath);
+        configReaders.add(configReader);
+        return configReader;
     }
 
-    @Override
-    public void close() {
-        save();
+    public static void closeAllConfigReaders() {
+        getConfigReaders().forEach(ConfigReader::save);
+    }
+
+    @NotNull
+    private static HashSet<ConfigReader> getConfigReaders() {
+        return configReaders;
     }
 }

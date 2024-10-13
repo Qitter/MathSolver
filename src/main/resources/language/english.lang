@@ -1,0 +1,12 @@
+# Menu
+menu.main=Menu : Please select a category
+menu.math.numeral=numerical calculation
+menu.math.algebra=algebraic calculation
+menu.math.equation=equation
+menu.exit=Press any other key to exit
+
+# Numerical calculation
+numeral.stage.enter=Press "exit" to exit
+numeral.stage.input=Please enter a numerical expression
+numeral.stage.result=The result is
+numeral.stage.key.back=exit

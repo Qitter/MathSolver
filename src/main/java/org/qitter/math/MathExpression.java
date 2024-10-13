@@ -1,4 +1,4 @@
-package org.qitter;
+package org.qitter.math;
 
 import org.jetbrains.annotations.NotNull;
 import org.qitter.log.Logger;
@@ -37,7 +37,7 @@ public class MathExpression {
      * @param expression 表达式
      * @return 所有项
      */
-    public static ArrayList<String> parseTokens(@NotNull String expression) {
+    public static @NotNull ArrayList<String> parseTokens(@NotNull String expression) {
         Logger.getLogger().log("进入 parseToken方法",expression);
         ArrayList<String> tokens = new ArrayList<>();
         Matcher m = TOKEN_PATTERN.matcher(expression);
@@ -66,10 +66,6 @@ public class MathExpression {
         tokens.addAll(list);
     }
 
-    public @NotNull ArrayList<String> getTokens() {
-        return tokens;
-    }
-
     @NotNull
     private static String workOut(@NotNull MathExpression expression) {
         if(VARIABLE_PATTERN.matcher(expression.getExpression()).matches()) {
@@ -85,6 +81,7 @@ public class MathExpression {
         return expression.expression = decimal.toString();
     }
 
+    @NotNull
     public String workOut() {
         return workOut(this);
     }
@@ -152,6 +149,7 @@ public class MathExpression {
         return expression;
     }
 
+    @NotNull
     @Override
     public String toString() {
         return super.toString()+"["+expression+"]";

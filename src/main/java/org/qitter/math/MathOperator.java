@@ -1,4 +1,4 @@
-package org.qitter;
+package org.qitter.math;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -23,9 +23,12 @@ public enum MathOperator {
             FIRST_NUM_GROUP_INDEX = 1,
             OPERATOR_GROUP_INDEX = 2,
             SECOND_NUM_GROUP_INDEX = 3;
+    @NotNull
     private final String string;
+    @NotNull
     private final BiFunction<BigDecimal,BigDecimal,BigDecimal> operation;
     private final int level;
+    @NotNull
     private final Pattern pattern;
     @NotNull
     private static final HashMap<String, MathOperator> stringToOperator = new HashMap<>();

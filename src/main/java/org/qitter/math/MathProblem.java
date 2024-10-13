@@ -1,4 +1,4 @@
-package org.qitter;
+package org.qitter.math;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -17,6 +17,7 @@ public abstract class MathProblem {
     }
 
     @Override
+    @NotNull
     public String toString() {
         return super.toString()+"["+ expression + "]";
     }

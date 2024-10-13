@@ -1,6 +1,6 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.qitter.MathExpression;
+import org.qitter.math.MathExpression;
 
 import java.io.IOException;
 import java.util.List;

@@ -1,0 +1,12 @@
+# 菜单
+menu.main=菜单:请选择一个选项
+menu.math.numeral=数值计算
+menu.math.algebra=代数计算
+menu.math.equation=方程求解
+menu.exit=按下其他任意键退出
+
+# 数值计算
+numeral.stage.enter=输入"退出"退出
+numeral.stage.input=请输入一个数值表达式:
+numeral.stage.result=结果是:
+numeral.stage.key.back=退出

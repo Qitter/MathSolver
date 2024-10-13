@@ -1,4 +1,4 @@
-package org.qitter;
+package org.qitter.math;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -62,6 +62,7 @@ public class MathResult {
         if(type != ResultType.EXPRESSION) {
             throw Logger.getLogger().error(new IllegalStateException("尝试在一个没有未知数的表达式中代入, 表达式 :" + expression));
         }
+        //TODO
         return expression.substitute(variables);
     }
 

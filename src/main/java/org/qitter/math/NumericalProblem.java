@@ -1,12 +1,15 @@
-package org.qitter;
+package org.qitter.math;
 
 import org.jetbrains.annotations.NotNull;
 import org.qitter.log.Logger;
 
 import java.util.Optional;
 
-public class FormulaProblem extends MathProblem{
-    public FormulaProblem(@NotNull String expression) {
+/**
+ * 无未知数的数学表达式
+ */
+public class NumericalProblem extends MathProblem {
+    public NumericalProblem(@NotNull String expression) {
         super(expression);
         Logger.getLogger().log(this,"已创建");
     }

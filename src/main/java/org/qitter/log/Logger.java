@@ -10,12 +10,19 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Logger implements AutoCloseable {
+    @NotNull
     private static final Path LOG_PATH = Path.of("logs.log");
+    @NotNull
     private static final Path ERROR_PATH = Path.of("errors.log");
+    @NotNull
     private static final ExecutorService logService = Executors.newSingleThreadExecutor();
+    @NotNull
     private static final ExecutorService errorService = Executors.newSingleThreadExecutor();
+    @NotNull
     private static final Logger logger = new Logger();
+    @NotNull
     private final PrintWriter logWriter;
+    @NotNull
     private final PrintWriter errorWriter;
     private boolean log;
     private Logger() {
@@ -31,6 +38,7 @@ public class Logger implements AutoCloseable {
         this.log = log;
     }
 
+    @NotNull
     public static Logger getLogger() {
         return logger;
     }
@@ -75,23 +83,13 @@ public class Logger implements AutoCloseable {
         }
         log(o + " : " + message);
     }
-
-    public void error(@NotNull CharSequence message) {
-        if(!log) {
-            return;
-        }
-        errorService.execute(() ->{
-            errorWriter.println(message);
-            errorWriter.flush();
-        });
-    }
-
     @NotNull
     public RuntimeException error(@NotNull RuntimeException e) {
         if(!log) {
             return e;
         }
         e.printStackTrace(errorWriter);
+        errorWriter.flush();
         return e;
     }
 
