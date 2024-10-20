@@ -1,8 +1,8 @@
 package org.qitter;
 
 import org.jetbrains.annotations.NotNull;
-import org.qitter.config.ConfigReader;
 import org.qitter.config.ConfigEnum;
+import org.qitter.config.ConfigReader;
 import org.qitter.language.LanguageManager;
 import org.qitter.log.Logger;
 import org.qitter.ui.StageManager;
@@ -19,6 +19,10 @@ public class Main {
         );
         LanguageManager.getInstance().setLanguage(ConfigEnum.LANGUAGE_CONFIG.getConfigReader().getProperty("language").orElse(LanguageManager.DEFAULT_LANGUAGE.getName()));
         StageManager.getInstance().pushStage(MenuStage.getInstance());
+        closeAll();
+    }
+
+    public static void closeAll() {
         ConfigReader.closeAllConfigReaders();
         Logger.getLogger().close();
     }

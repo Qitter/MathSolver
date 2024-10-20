@@ -5,7 +5,7 @@ import org.qitter.language.LanguageManager;
 
 import java.io.File;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LanguageLoaderTest extends BaseTest {
 

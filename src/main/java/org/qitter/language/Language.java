@@ -6,7 +6,10 @@ import org.qitter.log.Logger;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Properties;
 
 public enum Language {
     CHINESE("chinese","language/chinese.lang"),
@@ -31,9 +34,9 @@ public enum Language {
                     Objects.requireNonNull(Language.class.getClassLoader().getResourceAsStream(savePathInJar)), ConfigReader.CHARSET)
             );
         } catch (IOException e) {
-            throw Logger.getLogger().error(new RuntimeException(e));
+            throw Logger.getLogger().errorAndClose(new RuntimeException(e));
         } catch (NullPointerException e) {
-            throw Logger.getLogger().error(new RuntimeException("无法找到语言文件 : " + savePathInJar));
+            throw Logger.getLogger().errorAndClose(new RuntimeException("无法找到语言文件 : " + savePathInJar));
         }
         Map<String,String> map = new HashMap<>();
         properties.forEach((k,v) -> map.put(k.toString(),v.toString()));

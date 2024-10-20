@@ -1,9 +1,9 @@
 package org.qitter.ui.stage;
 
 import org.jetbrains.annotations.NotNull;
+import org.qitter.Main;
 import org.qitter.language.LanguageManager;
 import org.qitter.math.NumericalProblem;
-import org.qitter.Main;
 import org.qitter.ui.StageManager;
 
 public class NumericalStage extends Stage{

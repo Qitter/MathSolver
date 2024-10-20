@@ -1,6 +1,7 @@
 package org.qitter.log;
 
 import org.jetbrains.annotations.NotNull;
+import org.qitter.Main;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -20,11 +21,12 @@ public class Logger implements AutoCloseable {
     private static final ExecutorService errorService = Executors.newSingleThreadExecutor();
     @NotNull
     private static final Logger logger = new Logger();
+    private boolean opening = true;
     @NotNull
     private final PrintWriter logWriter;
     @NotNull
     private final PrintWriter errorWriter;
-    private boolean log;
+    private boolean log = true;
     private Logger() {
         try {
             logWriter = new PrintWriter(LOG_PATH.toFile());
@@ -44,7 +46,7 @@ public class Logger implements AutoCloseable {
     }
 
     public void log(@NotNull CharSequence message) {
-        if(!log) {
+        if(canNotLog()) {
             return;
         }
         logService.execute(() -> {
@@ -54,14 +56,14 @@ public class Logger implements AutoCloseable {
     }
 
     public void log(@NotNull CharSequence ...messages) {
-        if(!log) {
+        if(canNotLog()) {
             return;
         }
         log(String.join(" --- ", messages));
     }
 
     public void log(@NotNull Object o,CharSequence ... messages) {
-        if(!log) {
+        if(canNotLog()) {
             return;
         }
         log();
@@ -70,7 +72,7 @@ public class Logger implements AutoCloseable {
     }
 
     public void log(@NotNull Object o) {
-        if(!log) {
+        if(canNotLog()) {
             return;
         }
         log(String.valueOf(o));
@@ -78,23 +80,54 @@ public class Logger implements AutoCloseable {
     }
 
     public void log(@NotNull Object o,@NotNull CharSequence message) {
-        if(!log) {
+        if(canNotLog()) {
             return;
         }
         log(o + " : " + message);
     }
+
+    private boolean canNotLog() {
+        return !(log && opening);
+    }
+
+    /**
+     * 将错误信息打印到错误流中，并关闭所有的文件读取器，防止因意外退出导致配置文件不全
+     * @param e 错误信息
+     * @return 错误信息，将实参返回，方便调用者处理
+     */
     @NotNull
-    public RuntimeException error(@NotNull RuntimeException e) {
-        if(!log) {
+    public RuntimeException errorAndClose(@NotNull RuntimeException e) {
+        if(canNotLog()) {
             return e;
         }
         e.printStackTrace(errorWriter);
         errorWriter.flush();
+        Main.closeAll();
+        return e;
+    }
+
+    /**
+     * 将错误信息打印到错误流中，并执行指定的操作
+     * 若捕获异常后仍需要继续运行，调用此方法，为防止调用此方法后忘记执行对应的操作，添加了参数
+     * @param e 错误信息
+     * @param execute 执行的操作
+     * @return 错误信息，将实参返回，方便调用者处理
+     */
+    @NotNull
+    public RuntimeException errorExecute(@NotNull RuntimeException e, @NotNull Runnable execute) {
+        if(canNotLog()) {
+            return e;
+        }
+        e.printStackTrace(errorWriter);
+        errorWriter.flush();
+        execute.run();
         return e;
     }
 
     @Override
     public void close() {
+        opening = false;
+        log("日志输出流已关闭");
         logService.shutdown();
         errorService.shutdown();
         logger.logWriter.close();

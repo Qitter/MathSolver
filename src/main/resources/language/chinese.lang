@@ -3,10 +3,54 @@ menu.main=菜单:请选择一个选项
 menu.math.numeral=数值计算
 menu.math.algebra=代数计算
 menu.math.equation=方程求解
+menu.math.function=函数计算
+menu.help=帮助
 menu.exit=按下其他任意键退出
+
+# 帮助
+help.numeral=数值计算:输入一个数值表达式,例如"2+3*4"
+help.algebra=代数计算:输入一个代数表达式,例如"2*x+3"，输入对应的值后自动计算
+help.equation=方程求解:输入一个方程表达式,例如"2*x+3=0"，自动求解
+help.function=函数计算:输入一个函数表达式,例如"y=2*x+3"，自动化简，注意，所有的数字包括未知数都不能省略符号
+help.operator.add=加法，符号为+
+help.operator.sub=减法，符号为-
+help.operator.mul=乘法，符号为*
+help.operator.div=除法，符号为/
+help.operator.pow=幂运算，符号为^
+help.operator.log=取对数，符号为|
+help.operator.root=开根号，符号为&
+
 
 # 数值计算
 numeral.stage.enter=输入"退出"退出
 numeral.stage.input=请输入一个数值表达式:
 numeral.stage.result=结果是:
 numeral.stage.key.back=退出
+
+# 代数计算
+algebra.stage.enter=输入"退出"退出
+algebra.stage.input=请输入一个代数表达式:
+algebra.stage.result=结果是:
+algebra.stage.key.back=退出
+
+# 方程计算
+equation.stage.enter=输入"退出"退出
+equation.stage.input=请输入一个方程表达式(仅支持一元一次):
+equation.stage.result=结果是:
+equation.stage.key.back=退出
+
+# 函数计算
+function.menu.stage.enter=其他则会返回
+function.menu.stage.input=请选择一个函数:
+function.menu.stage.linear=线性函数
+function.menu.stage.quadratic=二次函数
+
+function.linear.stage.enter=输入"退出"退出
+function.linear.stage.input=请输入一个线性函数表达式:
+function.linear.stage.result=结果是:
+function.linear.stage.key.back=退出
+
+function.quadratic.stage.enter=输入"退出"退出
+function.quadratic.stage.input=请输入一个二次函数表达式:
+function.quadratic.stage.result=结果是:
+function.quadratic.stage.key.back=退出

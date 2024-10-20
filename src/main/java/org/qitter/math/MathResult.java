@@ -48,6 +48,14 @@ public class MathResult {
         return value.doubleValue();
     }
 
+    public long toLong() {
+        return value.longValue();
+    }
+
+    public @NotNull BigDecimal getValue() {
+        return value;
+    }
+
     public int toInt() {
         return value.intValue();
     }
@@ -58,12 +66,11 @@ public class MathResult {
     }
 
     @NotNull
-    public MathExpression substitute(@NotNull Map<String,Double> variables) {
+    public MathExpression substitute(@NotNull Map<Character,BigDecimal> variables) {
         if(type != ResultType.EXPRESSION) {
-            throw Logger.getLogger().error(new IllegalStateException("尝试在一个没有未知数的表达式中代入, 表达式 :" + expression));
+            throw Logger.getLogger().errorAndClose(new IllegalStateException("尝试在一个没有未知数的表达式中代入, 表达式 :" + expression));
         }
-        //TODO
-        return expression.substitute(variables);
+        return expression.substituteAndWorkOut(variables);
     }
 
     @Override

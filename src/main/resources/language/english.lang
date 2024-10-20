@@ -2,11 +2,55 @@
 menu.main=Menu : Please select a category
 menu.math.numeral=numerical calculation
 menu.math.algebra=algebraic calculation
+menu.math.function=function
 menu.math.equation=equation
+menu.help=help
 menu.exit=Press any other key to exit
+
+# help
+help.numeral=Numerical calculation: input a numerical expression, such as "2*x+3", input the corresponding value and automatically calculate
+help.algebra=Algebraic calculation: input an algebraic expression, such as "2*x+3", input the corresponding value and automatically calculate
+help.equation=Equation: input an equation, such as "2*x+3=5", input the corresponding value and automatically calculate
+help.function=Function: input a function, such as "2*x+3", input the corresponding value and automatically calculate
+help.operator.add=add, symbol is +
+help.operator.sub=subtraction, symbol is -
+help.operator.mul=multiplication, symbol is *
+help.operator.div=division, symbol is /
+help.operator.pow=power, symbol is ^
+help.operator.log=logarithm, symbol is log
+help.operator.root=root, symbol is &
 
 # Numerical calculation
 numeral.stage.enter=Press "exit" to exit
 numeral.stage.input=Please enter a numerical expression
 numeral.stage.result=The result is
 numeral.stage.key.back=exit
+
+# Algebra
+algebra.stage.enter=Press "exit" to exit
+algebra.stage.input=Please enter an algebraic expression
+algebra.stage.result=The result is :
+algebra.stage.key.back=exit
+
+# Equation
+equation.stage.enter=Press "exit" to exit
+equation.stage.input=Please enter an equation
+equation.stage.result=The result is :
+equation.stage.key.back=exit
+
+
+# Function
+function.menu.stage.enter=Press other key to exit
+function.menu.stage.input=Please select a function:
+function.menu.stage.linear=Linear function
+function.menu.stage.quadratic=Quadratic function
+
+function.linear.stage.enter=Press "exit" to exit
+function.linear.stage.input=Please enter a linear function expression
+function.linear.stage.result=The result is :
+function.linear.stage.key.back=exit
+
+function.quadratic.stage.enter=Press "exit" to exit
+function.quadratic.stage.input=Please enter a quadratic function expression
+function.quadratic.stage.result=The result is :
+function.quadratic.stage.key.back=exit
