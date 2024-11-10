@@ -16,14 +16,15 @@ import java.util.regex.Pattern;
  * 数学函数函数
  */
 public abstract class MathFunction {
+
     @NotNull
-    private static final Pattern FUNCTION_PATTERN = Pattern.compile("([a-zA-z])?=(.*)");
+    private static final Pattern FUNCTION_PATTERN = Pattern.compile("(?:([a-zA-z])=)?(.*)");
     private static final int FUNCTION_NAME_GROUP_INDEX =1,
             FUNCTION_EXPRESSION_GROUP_INDEX = 2;
     @NotNull
     private final MathExpression expression;
     @SuppressWarnings("unused")
-    public  static final char
+    public static final char
             COEFFICIENT_A = 'a',
             COEFFICIENT_B = 'b',
             COEFFICIENT_C = 'c',
@@ -65,23 +66,23 @@ public abstract class MathFunction {
         Matcher matcher = FUNCTION_PATTERN.matcher(expression);
         if (!matcher.find()) {
             throw Logger.getLogger().errorAndClose(
-                    new IllegalArgumentException(expression + "，未找到变量 不符合函数的格式，格式为 : y=" + simpleForm.getExpression())
+                    new NotMathFunctionException(expression + "，未找到变量 不符合函数的格式，格式为 : y=" + simpleForm.getExpression())
             );
         }
         try{
             this.expression = new MathExpression(matcher.group(FUNCTION_EXPRESSION_GROUP_INDEX));
             if(this.expression.getVariableCount() > 1) {
                 throw Logger.getLogger().errorAndClose(
-                        new IllegalArgumentException(expression + "，自变量不唯一 不符合函数的格式，格式为 : y=" + simpleForm.getExpression())
+                        new NotMathFunctionException(expression + "，自变量不唯一 不符合函数的格式，格式为 : y=" + simpleForm.getExpression())
                 );
             }
         }catch(RuntimeException e){
             throw Logger.getLogger().errorAndClose(
-                    new IllegalArgumentException(expression + "，不符合函数的格式，格式为 : y=" + simpleForm.getExpression(),e)
+                    new NotMathFunctionException(expression + "，不符合函数的格式，格式为 : y=" + simpleForm.getExpression(),e)
             );
         }
         Iterator<Character> iterator = this.expression.getVariables().iterator();
-        this.variableName = iterator.hasNext()?iterator.next():'\0';
+        this.variableName = iterator.hasNext()?iterator.next():'x';
         this.functionName = Optional.ofNullable(matcher.group(FUNCTION_NAME_GROUP_INDEX)).orElse("y").charAt(0);
         this.coefficients = solveCoefficientsMethod.apply(this.expression,variableName);
     }
@@ -98,8 +99,7 @@ public abstract class MathFunction {
 
     @NotNull
     public BigDecimal getCoefficient(char name){
-        return Optional.ofNullable(coefficients.get(name)).orElseThrow(()-> Logger.getLogger().errorAndClose(
-                new IllegalArgumentException("[" + expression.getExpression() + "]未找到系数 : " + name)));
+        return Optional.ofNullable(coefficients.get(name)).orElse(BigDecimal.ZERO);
     }
 
     public char getVariableName(){
@@ -118,4 +118,6 @@ public abstract class MathFunction {
 
     @NotNull
     public abstract MathExpression asSimpleForm();
+
+
 }

@@ -13,6 +13,7 @@ public enum ConfigEnum {
     LANGUAGE_CONFIG("language.properties",
             Map.of("language","chinese")
     );
+
     @NotNull
     private final ConfigReader configReader;
     ConfigEnum(@NotNull String configPath, @NotNull Map<String,String> ifFileNotExist) {

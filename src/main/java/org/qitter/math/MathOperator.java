@@ -42,9 +42,9 @@ public enum MathOperator {
     private static final HashMap<Integer,Pattern> OPERATOR_PATTERN = new HashMap<>();
     static {
         Map<Integer,StringJoiner> sjs = Map.of(
-                ADD_LEVEL,new StringJoiner("\\","(-?\\d+)([\\","])(-?\\d+)"),
-                MULTIPLY_LEVEL,new StringJoiner("\\","(\\d+)([\\","])(-?\\d+)"),
-                POWER_LEVEL,new StringJoiner("\\","(\\d+)([\\","])(-?\\d+)")
+                ADD_LEVEL,new StringJoiner("\\","(-?\\d*\\.?\\d+)([\\","])(-?\\d*\\.?\\d+)"),
+                MULTIPLY_LEVEL,new StringJoiner("\\","(\\d*\\.?\\d+)([\\","])(-?\\d*\\.?\\d+)"),
+                POWER_LEVEL,new StringJoiner("\\","(\\d*\\.?\\d+)([\\","])(-?\\d*\\.?\\d+)")
         );
         Arrays.stream(MathOperator.values()).forEach(s->{
             operatorOfEnum.put(s.operator,s);
@@ -127,18 +127,18 @@ public enum MathOperator {
     }
 
     /**
-     * 求log(base,b)
+     * 求log(base,index)
      * @param base 被开根数
-     * @param b 开根次数
+     * @param index 开根次数
      * @return 开根结果
      */
     @NotNull
-    public static BigDecimal log(@NotNull BigDecimal base, @NotNull BigDecimal b) {
-        if (b.compareTo(BigDecimal.ZERO) == 0) {
+    public static BigDecimal log(@NotNull BigDecimal base, @NotNull BigDecimal index) {
+        if (index.compareTo(BigDecimal.ZERO) == 0) {
             throw Logger.getLogger().errorAndClose(new IllegalArgumentException("log(0) is undefined"));
         }
-        Logger.getLogger().log("MathOperator.log 以" + base + "为底" + b);
-        return DIVIDE.apply(BigDecimal.valueOf(Math.log10(b.doubleValue())),BigDecimal.valueOf(Math.log10(base.doubleValue())));
+        Logger.getLogger().log("MathOperator.log 以" + base + "为底" + index);
+        return DIVIDE.apply(BigDecimal.valueOf(Math.log10(index.doubleValue())),BigDecimal.valueOf(Math.log10(base.doubleValue())));
     }
 
     /**
@@ -151,7 +151,7 @@ public enum MathOperator {
         if(a.compareTo(BigDecimal.ZERO) == 0) return BigDecimal.ZERO;
         return BigDecimalUtil.setScale(BigDecimal.valueOf(
                 Math.pow(10,DIVIDE.apply(log(BigDecimal.TEN,a),b).doubleValue())
-        ),0,RoundingMode.HALF_DOWN);
+        ),4,RoundingMode.HALF_DOWN);
     }
 
     @NotNull

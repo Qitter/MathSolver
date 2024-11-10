@@ -134,7 +134,7 @@ public class StringUtil {
         for (int i = 0; i < expression.length(); i++) {
             char c = expression.charAt(i);
             switch (c) {
-                case '+' ->{}
+                case '+' -> isNegative = isNegative == 0 && !buff.isEmpty() ? 1 : isNegative;
                 case '-' ->
                     // 0 -> -1, -1 -> 1, 1 -> -1
                     isNegative = isNegative == 0 ? -1 : -isNegative;

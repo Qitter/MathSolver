@@ -1,6 +1,5 @@
 package org.qitter;
 
-import org.jetbrains.annotations.NotNull;
 import org.qitter.config.ConfigEnum;
 import org.qitter.config.ConfigReader;
 import org.qitter.language.LanguageManager;
@@ -11,9 +10,8 @@ import org.qitter.ui.stage.MenuStage;
 import java.util.Scanner;
 
 public class Main {
-    @NotNull
     public static final Scanner scanner = new Scanner(System.in);
-    public static void main(@NotNull String[] args) {
+    public static void main(String[] args) {
         Logger.getLogger().setLog(
                 ConfigEnum.LOG_CONFIG.getConfigReader().getBoolean("log")
         );

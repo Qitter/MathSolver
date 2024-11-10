@@ -1,8 +1,7 @@
-package org.qitter.math.equation;
+package org.qitter.math.problems;
 
 import org.jetbrains.annotations.NotNull;
 import org.qitter.log.Logger;
-import org.qitter.math.MathProblem;
 import org.qitter.math.function.MathFunction;
 
 import java.util.function.Function;

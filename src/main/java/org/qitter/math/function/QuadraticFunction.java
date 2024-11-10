@@ -20,11 +20,11 @@ public class QuadraticFunction extends MathFunction {
     @NotNull
     private static final MathExpression xExpression = new MathExpression("(-b+(b^2-4*a*(c-y))&2)/(2*a)");
     public QuadraticFunction(@NotNull String expression) {
-        super(expression,simpleForm,solveCoefficientsMethod);
+        super(expression, simpleForm,solveCoefficientsMethod);
     }
 
     @NotNull
-    private static Map<Character,BigDecimal> solveCoefficientsMethod(@NotNull MathExpression expression, Character variable) {
+    private static Map<Character,BigDecimal> solveCoefficientsMethod(@NotNull MathExpression expression,@NotNull Character variable) {
         Map<Character,BigDecimal> coefficients = new HashMap<>();
         BigDecimal y1 = expression.substituteAndWorkOut(Map.of(variable, BigDecimal.ZERO)).toMathResult().getValue();
         coefficients.put(COEFFICIENT_C,y1);

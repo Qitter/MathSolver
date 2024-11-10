@@ -1,4 +1,4 @@
-package org.qitter.math.function.saved;
+package org.qitter.util.saved;
 
 import org.jetbrains.annotations.NotNull;
 import org.qitter.config.ConfigReader;

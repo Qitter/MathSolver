@@ -1,6 +1,7 @@
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 import org.qitter.config.ConfigReader;
 import org.qitter.log.Logger;
@@ -14,7 +15,8 @@ import java.util.Objects;
 import java.util.function.Function;
 
 public class BaseTest {
-    protected @NotNull Result getResult(String name) {
+    @NotNull
+    protected Result getResult(String name) {
         BufferedReader reader = new BufferedReader(
                 new InputStreamReader(Objects.requireNonNull(getClass().getResourceAsStream(name)))
         );
@@ -42,7 +44,7 @@ public class BaseTest {
         return new Result(inputs, expected);
     }
 
-    protected record Result(List<String> inputs, List<String> expected) {
+    protected record Result(@NotNull List<String> inputs,@NotNull List<String> expected) {
     }
 
     protected void test(@NotNull Function<String,String> consumer, @NotNull Result result) {

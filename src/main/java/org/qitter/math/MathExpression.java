@@ -2,7 +2,9 @@ package org.qitter.math;
 
 import org.jetbrains.annotations.NotNull;
 import org.qitter.log.Logger;
+import org.qitter.util.BigDecimalUtil;
 import org.qitter.util.StringUtil;
+import org.qitter.util.saved.SavedFunction;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -16,6 +18,7 @@ public class MathExpression {
     /* 变量名只能是一个字符 */
     @NotNull
     public static final Pattern VARIABLE_PATTERN = Pattern.compile("[a-zA-Z]");
+
     /* 变量名只能是一个字符 */
     @NotNull
     private final Set<Character> variables;
@@ -23,11 +26,16 @@ public class MathExpression {
     private List<String> tokens;
     private String expression;
     public MathExpression(@NotNull String expression) {
+        expression = parseFunctions(expression);
         this.tokens = parseTokens(expression);
         this.expression = expression;
         this.variables = new HashSet<>();
         VARIABLE_PATTERN.matcher(expression).results().forEach(result -> variables.add(result.group().charAt(0)));
         Logger.getLogger().log(this,"expression : " + expression,"tokens : " + tokens);
+    }
+
+    private @NotNull String parseFunctions(@NotNull String expression) {
+        return SavedFunction.parseFunctions(expression);
     }
 
     /**
@@ -40,6 +48,9 @@ public class MathExpression {
      * @return 所有项
      */
     public static @NotNull ArrayList<String> parseTokens(@NotNull String expression) {
+        if(expression.equals("(0-0)^2-4*(0-4)*(1-0))&2")) {
+            System.out.println("expression = " + expression);
+        }
         Logger.getLogger().log("进入 parseToken方法",expression);
         ArrayList<String> tokens = new ArrayList<>();
         Matcher m = TOKEN_PATTERN.matcher(expression);
@@ -76,7 +87,7 @@ public class MathExpression {
      * @return 计算结果
      */
     @NotNull
-    private static String workOut(@NotNull MathExpression expression) {
+    private static BigDecimal workOut(@NotNull MathExpression expression) {
         if(VARIABLE_PATTERN.matcher(expression.getExpression()).matches()) {
             throw Logger.getLogger().errorAndClose(new IllegalArgumentException("无法计算含有未知数的表达式,若要代入请调用 substitute方法 \t \"原式为"+ expression + "\""));
         }
@@ -87,11 +98,12 @@ public class MathExpression {
         }
 
         Logger.getLogger().log("原式等于 : " + expression,"结果为 : " + decimal);
-        return expression.expression = decimal.toString();
+        expression.expression = decimal.toString();
+        return BigDecimalUtil.stripTrailingZeros(decimal);
     }
 
     @NotNull
-    public String workOut() {
+    public BigDecimal workOut() {
         return workOut(this);
     }
 
@@ -195,13 +207,7 @@ public class MathExpression {
         StringBuilder expressionBuilder = new StringBuilder();
         this.expression.chars().forEach(c-> Optional.ofNullable(variables.get((char)c))
                         .ifPresentOrElse(
-                                m-> {
-                                    if (!m.hasVariable()) {
-                                        expressionBuilder.append(m.workOut());
-                                        return;
-                                    }
-                                    expressionBuilder.append(m.getVariableCount() > 1?"("+m.expression+")":m.expression);
-                                }, ()->expressionBuilder.append((char) c)
+                                m-> expressionBuilder.append(m.isSingleToken()?m.expression:"("+m.expression+")"), ()->expressionBuilder.append((char) c)
                         )
         );
         Logger.getLogger().log(this,"代入前",expression,"代入后",expressionBuilder);
@@ -246,6 +252,10 @@ public class MathExpression {
             return MathResult.ofExpression(expression);
         }
         return MathResult.ofNumber(expression);
+    }
+
+    public boolean isSingleToken() {
+        return tokens.size() == 1;
     }
 
     /**

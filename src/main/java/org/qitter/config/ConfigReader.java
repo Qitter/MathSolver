@@ -59,6 +59,7 @@ public class ConfigReader {
             }
 
             Logger.getLogger().log(this,properties.toString());
+            save();
         } catch (IOException e) {
             throw Logger.getLogger().errorAndClose(
                     new RuntimeException(e)

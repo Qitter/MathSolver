@@ -1,5 +1,9 @@
 import org.junit.jupiter.api.Test;
+import org.qitter.math.MathExpression;
+import org.qitter.util.MathExpressionUtil;
 import org.qitter.util.StringUtil;
+
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -26,10 +30,16 @@ public class StringUtilTest extends BaseTest{
     void testFormatNumber() {
         String name = "test/removeNegative.txt";
         Result result = getResult(name);
-        for (int i = 0; i < result.inputs().size(); i++) {
-            String expected = result.expected().get(i);
-            String removeNegative = StringUtil.formatNumber(result.inputs().get(i));
-            assertEquals(expected, removeNegative);
-        }
+//        for (int i = 0; i < result.inputs().size(); i++) {
+//            String expected = result.expected().get(i);
+//            String removeNegative = StringUtil.formatNumber(result.inputs().get(i));
+//            assertEquals(expected, removeNegative);
+//        }
+        test(StringUtil::formatNumber,result);
+    }
+
+    @Test
+    void testGetFunctionTime() {
+
     }
 }

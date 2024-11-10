@@ -69,4 +69,5 @@ public class MathExpressionTest extends BaseTest{
         MathExpression x2yExp = new MathExpression("x^2+y");
         Assertions.assertEquals(x2yExp.getVariables(), Set.of('x','y'));
     }
+
 }

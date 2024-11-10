@@ -3,6 +3,7 @@ package org.qitter.math;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.qitter.log.Logger;
+import org.qitter.util.BigDecimalUtil;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -27,7 +28,12 @@ public class MathResult {
     @Contract("_ -> new")
     public static @NotNull MathResult ofNumber(@NotNull String value) {
         Logger.getLogger().log("ofNumber",value);
-        return new MathResult(ResultType.INTEGER,new BigDecimal(value),value);
+        return new MathResult(ResultType.INTEGER, BigDecimalUtil.stripTrailingZeros(new BigDecimal(value)),value);
+    }
+    @Contract("_ -> new")
+    public static @NotNull MathResult ofNumber(@NotNull BigDecimal value) {
+        Logger.getLogger().log("ofNumber",value.toString());
+        return new MathResult(ResultType.INTEGER,value,value.toString());
     }
     @Contract("_ -> new")
     public static @NotNull MathResult ofExpression(@NotNull String expression) {

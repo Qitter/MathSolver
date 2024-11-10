@@ -1,0 +1,20 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class MathExpression {
+    static ArrayList<String> parseToken(String expression)
+
+}
+
+enum MathOperator {
+    ADD
+    SUBTRACT
+    MULTIPLY
+    DIVIDE
+    POW
+    LOG
+    ROOT
+    BigDecimal apply(BigDecimal a, BigDecimal b)
+    BigDecimal log(BigDecimal base,BigDecimal index)
+}
+@enduml
