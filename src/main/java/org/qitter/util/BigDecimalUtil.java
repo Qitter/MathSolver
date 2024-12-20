@@ -37,7 +37,6 @@ public class BigDecimalUtil {
 
         // ((first + end) * size ) / 2
         BigDecimal sum = first.add(end).multiply(BigDecimal.valueOf(list.size())).divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP);
-        double v = list.stream().reduce(BigDecimal.ZERO, BigDecimal::add).subtract(sum).doubleValue();
         return sum.compareTo(list.stream().reduce(BigDecimal.ZERO, BigDecimal::add)) == 0;
 //        return v <= 0.1 && v >= -0.1;
     }
@@ -48,10 +47,20 @@ public class BigDecimalUtil {
 
     @NotNull
     public static BigDecimal stripTrailingZeros(@NotNull BigDecimal b) {
-        if(b.doubleValue() != b.longValue()) {
-            return b.stripTrailingZeros();
+        String exp = b.toString();
+        int index = exp.indexOf(".");
+        if(index == -1) {
+            return b;
         }
-        return b;
+        int end = exp.length() - 1;
+        for (; end > index; end--) {
+            char c = exp.charAt(end);
+            if(c != '0') {
+                break;
+            }
+        }
+
+        return new BigDecimal(exp.substring(0, end + 1));
     }
 
 

@@ -35,8 +35,19 @@ public class MathExpressionTest extends BaseTest{
 
         BigDecimal log = MathOperator.ROOT.apply(BigDecimal.valueOf(4),BigDecimal.valueOf(2));
         assertEquals(log,BigDecimal.valueOf(2));
+        BigDecimal root = MathOperator.ROOT.apply(BigDecimal.valueOf(9),BigDecimal.valueOf(3));
+        assertEquals(root,BigDecimal.valueOf(2));
     }
 
+    @Test
+    void rootTest() {
+        Result result = getResult("test/root.txt");
+        test(s->{
+            MathExpression mathExpression = new MathExpression(s);
+            mathExpression.workOut();
+            return mathExpression.getExpression();
+        },result);
+    }
 
     @Test
     void parseTokenTest() {

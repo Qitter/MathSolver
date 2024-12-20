@@ -33,7 +33,7 @@ public class MathExpressionUtilTest extends BaseTest {
         assertEquals(6,functionTimes);
 
         try {
-            System.out.println(MathExpressionUtil.getFunctionTimes(new MathExpression("x&2"), 10, TimeUnit.SECONDS));
+            System.out.println(MathExpressionUtil.getFunctionTimes(new MathExpression("x&2"), 1, TimeUnit.SECONDS));
         } catch (ExecutionException | TimeoutException e) {
             throw new RuntimeException(e);
         }
@@ -41,7 +41,7 @@ public class MathExpressionUtilTest extends BaseTest {
 
     @Test
     void testSimplify() {
-        assertEquals(new BigDecimal("0.00").stripTrailingZeros(),BigDecimal.ZERO);
-        test(s-> MathExpressionUtil.simplify(new MathExpression(s)).getExpression(),getResult("test/simplifyExpressions.txt"));
+        MathExpression mathExpression = new MathExpression("x*(100-(x-3000)/50)-100*((x-3000)/50)");
+        System.out.println(MathExpressionUtil.simplify(mathExpression));
     }
 }

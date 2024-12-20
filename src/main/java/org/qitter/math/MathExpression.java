@@ -92,7 +92,7 @@ public class MathExpression {
             throw Logger.getLogger().errorAndClose(new IllegalArgumentException("无法计算含有未知数的表达式,若要代入请调用 substitute方法 \t \"原式为"+ expression + "\""));
         }
         expression.workOutAllTokens();
-        BigDecimal decimal = new BigDecimal(0);
+        BigDecimal decimal = BigDecimal.ZERO;
         for (String token : expression.tokens) {
             decimal = decimal.add(new BigDecimal(token));
         }
@@ -254,6 +254,10 @@ public class MathExpression {
         return MathResult.ofNumber(expression);
     }
 
+    /**
+     * 判断是否只有一个项
+     * @return true 表示只有一个项
+     */
     public boolean isSingleToken() {
         return tokens.size() == 1;
     }

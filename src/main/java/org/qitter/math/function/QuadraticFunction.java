@@ -55,10 +55,6 @@ public class QuadraticFunction extends MathFunction {
 
     @Override
     public @NotNull MathExpression asSimpleForm() {
-        Map<Character,MathExpression> substituteVariable = new HashMap<>();
-        getCoefficients().forEach((c, v) -> substituteVariable.put(c,MathExpression.of(v)));
-        substituteVariable.put(FUNCTION_RESULT,new MathExpression("" + getFunctionName()));
-        substituteVariable.put(FUNCTION_VARIABLE,new MathExpression("" + getVariableName()));
-        return simpleForm.substituteExpression(substituteVariable);
+        return simplyExpression();
     }
 }

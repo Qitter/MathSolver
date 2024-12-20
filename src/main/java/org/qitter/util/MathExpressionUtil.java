@@ -132,11 +132,12 @@ public class MathExpressionUtil {
         expression.getVariables().forEach(v->{
             map.put(v,new MathExpression(String.valueOf(v)));
             MathFunction mathFunction = MathFunctionUtil.createMathFunction(expression.substituteExpression(map));
+            var size = mathFunction.getCoefficientCount();
             var it = mathFunction.getCoefficients().values().iterator();
-            var size = mathFunction.getCoefficients().size();
-            for (int i = size - 1; i > 0 && it.hasNext(); i--) {
+            for (int i = size - 1;it.hasNext(); i--) {
                 BigDecimal next = it.next();
-                if(next.equals(BigDecimal.ZERO)){
+                next = BigDecimalUtil.stripTrailingZeros(next);
+                if(next.equals(BigDecimal.ZERO) || i == 0){
                     continue;
                 }
                 expressionString
@@ -145,6 +146,14 @@ public class MathExpressionUtil {
                         .append(i == 1 ? "" : "^" + i)
                         .append("+");
             }
+//            for (var value : mathFunction.getCoefficients().values()) {
+//                if(value.equals(BigDecimal.ZERO)){
+//                    continue;
+//                }
+//                expressionString
+//                        .append(value.equals(BigDecimal.ONE) ? "" : value + "*")
+//                        .append(v)
+//            }
             map.put(v,MathExpression.of(BigDecimal.ZERO));
         });
         BigDecimal constToken = expression.substituteExpression(map).workOut();

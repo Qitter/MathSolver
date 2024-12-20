@@ -55,23 +55,24 @@ public class StringUtil {
         if(expression.charAt(0) != '(' || expression.charAt(expression.length() - 1) != ')') {
             return false;
         }
-        ArrayDeque<Character> characters = new ArrayDeque<>();
+//        ArrayDeque<Character> characters = new ArrayDeque<>();
+        int count = 0;
         //用于检查括号后是否还有字符，若它的值等于 总长-1，就表示没有字符
         int lastIndex = -2;
         for (int i = 0; i < expression.length(); i++) {
             char c = expression.charAt(i);
             switch (c) {
-                case '('-> characters.push(c);
+                case '('-> count++;
                 case ')'-> {
-                    if(characters.isEmpty()) {
+                    if(count == 0) {
                         return false;
                     }
-                    characters.pop();
+                    count--;
                     lastIndex = i;
                 }
             }
         }
-        return characters.isEmpty() && lastIndex == expression.length() - 1;
+        return count==0 && lastIndex == expression.length() - 1;
     }
 
     /**

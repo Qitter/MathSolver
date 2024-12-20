@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -102,6 +103,14 @@ public abstract class MathFunction {
         return Optional.ofNullable(coefficients.get(name)).orElse(BigDecimal.ZERO);
     }
 
+    public int getCoefficientCount(){
+        return coefficients.size();
+    }
+
+    public int getFunctionTimes(){
+        return coefficients.size() - 1;
+    }
+
     public char getVariableName(){
         return variableName;
     }
@@ -119,5 +128,26 @@ public abstract class MathFunction {
     @NotNull
     public abstract MathExpression asSimpleForm();
 
+    @NotNull
+    public MathExpression simplyExpression(){
+        int functionTimes = getFunctionTimes();
+        StringBuilder expressionBuilder = new StringBuilder();
+        for (BigDecimal v : getCoefficients().values()) {
+            if (v.equals(BigDecimal.ZERO)) {
+                continue;
+            }
+            expressionBuilder.append(v);
+            if (functionTimes == 0) {
+                continue;
+            }
 
+            expressionBuilder.append("*").append(variableName);
+            if (functionTimes != 1) {
+                expressionBuilder.append("^").append(functionTimes);
+            }
+            expressionBuilder.append("+");
+            functionTimes--;
+        }
+        return new MathExpression(expressionBuilder.toString());
+    }
 }

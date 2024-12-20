@@ -146,12 +146,14 @@ public enum MathOperator {
      * @param a 被开根数
      * @param b 开根次数
      * @return 开根结果
+     * 10 ^ (log(10,a) / b)
+     * log(10,a) / log(10,b)
      */
     public static BigDecimal root(@NotNull BigDecimal a,@NotNull BigDecimal b) {
         if(a.compareTo(BigDecimal.ZERO) == 0) return BigDecimal.ZERO;
-        return BigDecimalUtil.setScale(BigDecimal.valueOf(
-                Math.pow(10,DIVIDE.apply(log(BigDecimal.TEN,a),b).doubleValue())
-        ),4,RoundingMode.HALF_DOWN);
+        return BigDecimalUtil.setScale(
+                LOG.apply(b,a)
+        ,4,RoundingMode.HALF_DOWN);
     }
 
     @NotNull
